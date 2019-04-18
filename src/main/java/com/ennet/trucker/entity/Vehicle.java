@@ -1,13 +1,14 @@
 package com.ennet.trucker.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
-public class Vehicles {
+@Table(name = "vehicle")
+public class Vehicle {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String vin;
     private String make;
     private String model;
@@ -16,6 +17,12 @@ public class Vehicles {
     private float maxFuelVolume;
     private String lastServiceDate;
 
+    public Vehicle() {
+    }
+
+    public Vehicle(String vin) {
+        this.vin = vin;
+    }
 
     public String getVin() {
         return vin;
@@ -75,7 +82,7 @@ public class Vehicles {
 
     @Override
     public String toString() {
-        return "Vehicles{" +
+        return "Vehicle{" +
                 "vin='" + vin + '\'' +
                 ", make='" + make + '\'' +
                 ", model='" + model + '\'' +

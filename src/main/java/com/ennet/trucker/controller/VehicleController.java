@@ -1,8 +1,9 @@
 package com.ennet.trucker.controller;
 
-import com.ennet.trucker.entity.Vehicles;
+import com.ennet.trucker.entity.Vehicle;
 import com.ennet.trucker.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,33 +14,39 @@ import java.util.List;
 @RequestMapping("/vehicles")
 public class VehicleController {
 
+    @Qualifier("vehicleServiceImpl")
     @Autowired
     VehicleService service;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Vehicles>  findAll(){
+    public List<Vehicle>  findAll(){
         return service.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{vin}")
-    public Vehicles findOne(@PathVariable("vin") String vin) {
+    public Vehicle findOne(@PathVariable("vin") String vin) {
         return service.findByVin(vin);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Vehicles create(@RequestBody Vehicles vehicle){
+    public Vehicle create(@RequestBody Vehicle vehicle){
         System.out.println(vehicle);
         return service.create(vehicle);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public List<Vehicles> update(@RequestBody List<Vehicles> vehicles){
+    public List<Vehicle> update(@RequestBody List<Vehicle> vehicles){
         return service.update(vehicles);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/remove/{vin}")
-    public void delete(@PathVariable("vin") String vin){
-        service.delete(vin);
+    public boolean deleteVehiclesByVin(@PathVariable("vin") String vin){
+        return service.deleteVehiclesByVin(vin);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/deleteAll")
+    public void deleteAll(){
+        service.deleteAll();
     }
 
 

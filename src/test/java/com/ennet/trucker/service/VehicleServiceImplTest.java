@@ -1,7 +1,7 @@
 package com.ennet.trucker.service;
 
 import com.ennet.trucker.Exception.ResourceNotFoundException;
-import com.ennet.trucker.entity.Vehicles;
+import com.ennet.trucker.entity.Vehicle;
 import com.ennet.trucker.repository.VehicleRepository;
 import org.junit.After;
 import org.junit.Assert;
@@ -15,6 +15,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,11 +38,11 @@ public class VehicleServiceImplTest {
     @MockBean
     private VehicleRepository repository;
 
-    private List<Vehicles> vehicles;
+    private List<Vehicle> vehicles;
 
     @Before
     public void setup(){
-        Vehicles vehicle = new Vehicles();
+        Vehicle vehicle = new Vehicle();
         vehicle.setVin("vin-1");
         vehicle.setMake("FORD");
         vehicle.setModel("FUSION");
@@ -60,23 +62,23 @@ public class VehicleServiceImplTest {
 
     @After
     public void cleanUp(){
-
     }
-    //TODO: implementation pending!
-/*    @Test(expected = ResourceNotFoundException.class)
+
+
+    /*@Test(expected = ResourceNotFoundException.class)
     public void findAllEmpty(){
         service.findAll();
     }*/
 
     @Test
     public void findAll() {
-        List<Vehicles> result = service.findAll();
+        List<Vehicle> result = service.findAll();
         Assert.assertEquals("Should Return all Employees",result,vehicles);
     }
 
     @Test
     public void findByVin() {
-        Vehicles vehicle = service.findByVin(vehicles.get(0).getVin());
+        Vehicle vehicle = service.findByVin(vehicles.get(0).getVin());
         Assert.assertEquals("Should return one employee", vehicles.get(0), vehicle);
     }
 
@@ -87,22 +89,22 @@ public class VehicleServiceImplTest {
 
     @Test
     public void create() {
-        Vehicles vehicles1 = new Vehicles();
-        vehicles1.setVin("vin-2");
-        vehicles1.setMake("FORD");
-        vehicles1.setModel("FUSION");
-        vehicles1.setYear("2016");
-        vehicles1.setMaxFuelVolume(15);
-        vehicles1.setLastServiceDate("2017-05-25T17:31:25.268Z");
-        vehicles = Collections.singletonList(vehicles1);
+        Vehicle vehicle1 = new Vehicle();
+        vehicle1.setVin("vin-2");
+        vehicle1.setMake("FORD");
+        vehicle1.setModel("FUSION");
+        vehicle1.setYear("2016");
+        vehicle1.setMaxFuelVolume(15);
+        vehicle1.setLastServiceDate("2017-05-25T17:31:25.268Z");
+        vehicles = Collections.singletonList(vehicle1);
 
-        Mockito.when(service.create(vehicles1))
-                .thenReturn(vehicles1);
+        Mockito.when(service.create(vehicle1))
+                .thenReturn(vehicle1);
     }
 
     @Test
     public void updateExisting() {
-        Vehicles newVehicle = vehicles.get(0);
+        Vehicle newVehicle = vehicles.get(0);
         newVehicle.setVin(newVehicle.getVin());
         newVehicle.setModel("X3");
         newVehicle.setMake("BMW");
@@ -112,31 +114,30 @@ public class VehicleServiceImplTest {
 
     @Test
     public void updateForNewVehicle() {
-        Vehicles vehicles1 = new Vehicles();
-        vehicles1.setVin("vin-3");
-        vehicles1.setMake("Audi");
-        vehicles1.setModel("A6");
-        vehicles1.setYear("2009");
-        vehicles1.setMaxFuelVolume(13);
-        vehicles1.setLastServiceDate("2017-05-25T17:31:25.268Z");
-        vehicles = Collections.singletonList(vehicles1);
+        Vehicle vehicle1 = new Vehicle();
+        vehicle1.setVin("vin-3");
+        vehicle1.setMake("Audi");
+        vehicle1.setModel("A6");
+        vehicle1.setYear("2009");
+        vehicle1.setMaxFuelVolume(13);
+        vehicle1.setLastServiceDate("2017-05-25T17:31:25.268Z");
+        vehicles = Collections.singletonList(vehicle1);
         Mockito.when(service.update(vehicles)).thenReturn(vehicles);
     }
 
     @Test
     public void delete() {
+        Assert.assertEquals(service.deleteVehiclesByVin(vehicles.get(0).getVin()),true);
 
-        /*Mockito.doNothing().doThrow(new ResourceNotFoundException("No Vehicle found by the given VIN")).when(repository).delete(vehicles.get(0));
-        Vehicles v = vehicles.get(0);
-        Mockito.when(repository.findByVin(vehicles.get(0).getVin())).thenReturn(v);
-        repository.delete(v);
-        Mockito.verify(repository).delete(v);*/
-        //TODO: Assertion pending
-        service.delete(vehicles.get(0).getVin());
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void vinNotFoundDelete() {
-        service.delete("xyz");
+        service.deleteVehiclesByVin("xyz");
+    }
+
+    @Test
+    public void deleteAllTest(){
+        service.deleteAll();
     }
 }
